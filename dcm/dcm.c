@@ -7,6 +7,9 @@
 
 #include "dcm.h"
 
+extern struct error_estimator sensors[];
+extern size_t sensors_size;
+
 /* PID factor */
 float twoKp = 2.0f * 0.5f;
 float twoKi = 2.0f * 0.0f;
@@ -15,13 +18,10 @@ float twoKi = 2.0f * 0.0f;
 const float sample_freq = 355;
 
 /* Quaternion */
-//float q0 = 1, q1 = 0, q2 = 0, q3 = 0;
 struct Quaternion4f q;
 
 /* integral result */
 struct Vector3f integralFB;
-
-static struct errori sensors_errors[] = { {&get_estimated_error_acce}, {&get_estimated_error_magne} };
 
 void dcm_init(){
 	q.w = 1;
@@ -34,12 +34,16 @@ void dcm_step(struct Vector3f g) {
 
 	float recipNorm;
 
+	struct Vector3f tmp_raw_data;
 	struct Vector3f halfe;
 	halfe.x = halfe.y = halfe.z = 0;
 
 	size_t i;
-	for (i=0; i<sizeof(sensors_errors)/sizeof(sensors_errors[0]);i++){//pay attention, sensors_errors must NOT be pointer
-		(*sensors_errors[i].get_estimated_error)(q, &halfe);
+	for (i=0; i<sensors_size; i++){
+		/* IF there is new raw data (get_raw_data == 0) then use it for estimation */
+		if (! (*sensors[i].get_raw_data)(&tmp_raw_data) ){
+			(*sensors[i].get_estimated_error)(q, &halfe, tmp_raw_data);
+		}
 	}
 
 	// Apply feedback only when valid data has been gathered from sensors

@@ -1,28 +1,23 @@
-PROJECTNAME=test
 CC=gcc
+LD=$(CC)
+CFLAGS= -Wall -Wextra -Wpedantic -I . -std=c11
 
-CFLAGS= -I .
-
-TARGETS=all clean
+PROJECTNAME=test
 
 ODIR=build
 
 LIBS=-lm
 
-SUBDIRS_TARGETS := \
-    $(foreach t,$(TARGETS),$(addsuffix $t,$(SUBDIRS)))
-
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-
+SOURCE=$(shell find . -name "*.c")
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 all: $(OBJ)
 	mkdir -p $(ODIR)
-	gcc -o $(ODIR)/$(PROJECTNAME).o $(CFLAGS) $(LIBS) test/main.c 
+	$(LD) $(CFLAGS) $(LIBS) $(SOURCE) -o $(ODIR)/$(PROJECTNAME)
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
+	rm -f $(ODIR) 
