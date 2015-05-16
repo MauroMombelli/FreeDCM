@@ -8,7 +8,7 @@ ODIR=build
 
 LIBS=-lm
 
-SOURCE=$(shell find . -name "*.c")
+SOURCE=$(shell find . -follow -name "*.c")
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

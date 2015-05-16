@@ -8,9 +8,6 @@
 #ifndef DCM_H_
 #define DCM_H_
 
-#include <stdint.h>
-#include <stddef.h>
-
 #include "my_math/my_math.h"
 #include "estimators/accelerometer.h"
 #include "estimators/magnetometer.h"
