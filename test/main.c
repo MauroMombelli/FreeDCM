@@ -50,16 +50,17 @@ int main() {
 		do_step(i);
 	}
 
+	const float halfMax = RAND_MAX/2.0f;
 	while (1) {
-		gyroValue.x = rand();
-		gyroValue.y = rand();
-		gyroValue.z = rand();
-		acceValue.x = rand();
-		acceValue.y = rand();
-		acceValue.z = rand();
-		magneValue.x = rand();
-		magneValue.y = rand();
-		magneValue.z = rand();
+		gyroValue.x = rand()-halfMax;
+		gyroValue.y = rand()-halfMax;
+		gyroValue.z = rand()-halfMax;
+		acceValue.x = rand()-halfMax;
+		acceValue.y = rand()-halfMax;
+		acceValue.z = rand()-halfMax;
+		magneValue.x = rand()-halfMax;
+		magneValue.y = rand()-halfMax;
+		magneValue.z = rand()-halfMax;
 		do_step(i++);
 	}
 
