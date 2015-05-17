@@ -7,17 +7,21 @@
 
 #include "dcm_conf.h"
 
+struct Vector3f gyroValue = { 0, 0, 0 };
+struct Vector3f acceValue = { 0, 0, 0 };
+struct Vector3f magneValue = { 0, 0, 0 };
+
 uint8_t get_next_acce(struct Vector3f* toFill){
-	toFill->x = 0;
-	toFill->y = 0;
-	toFill->z = 0;
+	toFill->x = acceValue.x;
+	toFill->y = acceValue.y;
+	toFill->z = acceValue.z;
 	return 0;
 }
 
 uint8_t get_next_magne(struct Vector3f* toFill){
-	toFill->x = 0;
-	toFill->y = 0;
-	toFill->z = 0;
+	toFill->x = magneValue.x;
+	toFill->y = magneValue.y;
+	toFill->z = magneValue.z;
 	return 0;
 }
 

@@ -7,7 +7,7 @@
 
 #include "accelerometer.h"
 
-struct Vector3f zero_acce = {-4089.385,5226.89,7490.706666666667};
+struct Vector3f zero_acce = {0,0,0};
 
 void get_estimated_error_acce(struct Quaternion4f q, struct Vector3f *ris, struct Vector3f rawData) {
 

@@ -37,12 +37,6 @@ void get_estimated_error_magne(struct Quaternion4f q, struct Vector3f *ris, stru
 		halfwy = bx * (q.x * q.y - q.w * q.z) + bz * (q.w * q.x + q.y * q.z);
 		halfwz = bx * (q.w * q.y + q.x * q.z) + bz * (0.5f - q.x * q.x - q.y * q.y);
 
-		/* Normalize estimated reference field */
-		float norm = invSqrt(halfwx * halfwx + halfwy * halfwy + halfwz * halfwz);
-		halfwx *= norm;
-		halfwy *= norm;
-		halfwz *= norm;
-
 		/* Error is sum of cross product between estimated direction and measured direction of field vectors */
 		ris->x += (rawData.y * halfwz - rawData.z * halfwy);
 		ris->y += (rawData.z * halfwx - rawData.x * halfwz);
