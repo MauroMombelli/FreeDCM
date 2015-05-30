@@ -8,7 +8,7 @@ There are many libraries out there, but this implementation as some great differ
 - as portable as possibe
 - "drop in" as git submodule/subtree is easy
 - cleaned up the sensor code
-- added test for caomparison with original code output (TODO: move in another projecct)
+- added test for comparison with original code output (TODO: move in another projecct)
 
 It is based on the code/ideas from:
  - FreeIMU implementation: https://github.com/Fabio-Varesano-Association/freeimu
