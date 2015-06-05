@@ -16,4 +16,6 @@ It is based on the code/ideas from:
  - Madgwick implementation (paper): http://www.x-io.co.uk/res/doc/madgwick_internal_report.pdf
  - Mahony original paper https://hal.archives-ouvertes.fr/file/index/docid/488376/filename/2007_Mahony.etal_TAC-06-396_v3.pdf
 
+[![Build Status](https://travis-ci.org/MauroMombelli/FreeDCM.svg)](https://travis-ci.org/MauroMombelli/FreeDCM)
+
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/MauroMombelli/FreeDCM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
