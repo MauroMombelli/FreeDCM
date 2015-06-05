@@ -1,0 +1,3 @@
+[submodule "TrigonomeC"]
+	path = TrigonomeC
+	url = https://github.com/MauroMombelli/TrigonomeC.git

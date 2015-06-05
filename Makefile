@@ -2,7 +2,7 @@ CC=gcc
 LD=$(CC)
 CFLAGS= -Wall -Wextra -Wpedantic -I . -std=c11
 
-PROJECTNAME=test
+PROJECTNAME=Test_FreeDcmTest
 
 ODIR=build
 
