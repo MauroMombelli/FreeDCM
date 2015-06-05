@@ -1,7 +1,7 @@
-ifndef CC
+#ifndef CC
 CC=gcc
-CFLAGS= -Wall -Wextra -Wpedantic -I . -std=c11
-endif
+CFLAGS= -I TrigonomeC -Wall -Wextra -Wpedantic -I . -std=c11
+#endif
 LD=$(CC)
 
 PROJECTNAME=Test_FreeDcmTest
