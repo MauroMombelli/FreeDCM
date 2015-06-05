@@ -1,0 +1,7 @@
+# We use c for the main project.
+language: c
+compiler: 
+  - gcc
+  - clang
+
+script: make all
