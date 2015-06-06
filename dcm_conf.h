@@ -9,7 +9,7 @@
 #define DCM_CONF_H_
 
 #include "dcm.h"
-#include "my_math/my_math.h"
+#include "TrigonomeC/my_math.h"
 
 uint8_t get_next_acce(struct Vector3f* toFill);
 uint8_t get_next_magne(struct Vector3f* toFill);

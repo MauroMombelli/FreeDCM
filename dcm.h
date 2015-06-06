@@ -8,7 +8,7 @@
 #ifndef DCM_H_
 #define DCM_H_
 
-#include "my_math/my_math.h"
+#include "TrigonomeC/my_math.h"
 #include "estimators/accelerometer.h"
 #include "estimators/magnetometer.h"
 
