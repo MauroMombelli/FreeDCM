@@ -1,6 +1,6 @@
 {
   "name": "FreeDCM",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repo": "MauroMombelli/FreeDCM",
   "description": "An implementation of DCM, an orientation algoritm easy to espand",
   "keywords": ["DCM", "DirectCosineMatrix", "orientation"],
