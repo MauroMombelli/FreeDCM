@@ -5,6 +5,7 @@
   "description": "An implementation of DCM, an orientation algoritm easy to espand",
   "keywords": ["DCM", "DirectCosineMatrix", "orientation"],
   "license": "LGPL",
+  "src": ["dcm.c", "dcm.h", "dcm_conf.c", "dcm_conf.h", "estimators/accelerometer.c", "estimators/accelerometer.h", "estimators/magnetometer.c", "estimators/magnetometer.h"],
   "dependencies": {
     "MauroMobelli/TrigonomeC": "0.0.1"
   }
