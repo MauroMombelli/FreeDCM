@@ -7,9 +7,6 @@
 
 #include "dcm.h"
 
-extern struct error_estimator sensors[];
-extern size_t sensors_size;
-
 /* PID factor */
 float twoKp = 2.0f * 0.5f;
 float twoKi = 2.0f * 0.0f;
@@ -23,14 +20,14 @@ struct Quaternion4f q;
 /* integral result */
 struct Vector3f integralFB;
 
-void dcm_init(){
+static void dcm_init(){
 	q.w = 1;
 	q.x = q.y = q.z = 0;
 
 	integralFB.x = integralFB.y = integralFB.z = 0;
 }
 
-void dcm_step(struct Vector3f g) {
+static void dcm_step(struct Vector3f g, struct error_estimator *sensors, size_t sensors_size) {
 
 	float recipNorm;
 
@@ -92,9 +89,13 @@ void dcm_step(struct Vector3f g) {
 	q.z *= recipNorm;
 }
 
-void dcm_get_quaternion(struct Quaternion4f *qRis){
+static void dcm_get_quaternion(struct Quaternion4f *qRis){
 	qRis->w = q.w;
 	qRis->x = q.x;
 	qRis->y = q.y;
 	qRis->z = q.z;
 }
+
+struct DCM_s DCM = {
+    &dcm_init, &dcm_step, &dcm_get_quaternion
+};
