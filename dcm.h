@@ -11,17 +11,22 @@
 #include "TrigonomeC/my_math.h"
 
 struct error_estimator {
-    uint8_t (*get_isu_data)(struct Vector3f*); /* give data into International Standard Unit notation; acceleration are in m/s, rotation in rad/s, etc.. */
-    uint8_t (*get_raw_data)(struct Vector3f*);
-    void (*get_estimated_error)(struct Quaternion4f, struct Vector3f*, struct Vector3f);
+    uint8_t (*raw_to_is)(const struct Vector3f* const raw_value, struct Vector3f* const is_value); /* give data into International Standard Unit notation; acceleration are in m/s, rotation in rad/s, etc.. */
+    uint8_t (*get_raw_data)(struct Vector3f* const result);
+    uint8_t (*get_estimated_error)(const struct Quaternion4f* const orientation, const struct Vector3f* const raw_value, struct Vector3f* const result);
+};
+
+struct sensors{
+    const struct error_estimator* const sensors;
+    const size_t sensors_number;
 };
 
 struct DCM_s {
     void (*dcm_init)(void);
-    void (*dcm_step)(struct Vector3f, struct error_estimator *, size_t);
-    void (*dcm_get_quaternion)(struct Quaternion4f *);
+    void (*dcm_step)(const struct Vector3f* const gyroscope, const struct sensors* const sensors);
+    void (*dcm_get_quaternion)(struct Quaternion4f* const result);
 };
 
-extern struct DCM_s DCM;
+extern const struct DCM_s DCM;
 
 #endif /* DCM_H_ */

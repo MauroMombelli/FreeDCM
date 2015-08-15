@@ -9,7 +9,9 @@
 
 struct Vector3f zero_acce = {0,0,0};
 
-void get_estimated_error_acce(struct Quaternion4f q, struct Vector3f *ris, struct Vector3f rawData) {
+uint8_t get_estimated_error_acce(const struct Quaternion4f* const q, const struct Vector3f* const raw_data, struct Vector3f* const ris) {
+
+    struct Vector3f rawData = {raw_data->x, raw_data->y, raw_data->z};
 
 	rawData.x -= zero_acce.x;
 	rawData.y -= zero_acce.y;
@@ -26,9 +28,9 @@ void get_estimated_error_acce(struct Quaternion4f q, struct Vector3f *ris, struc
 		rawData.z *= recipNorm;
 
 		/* Estimated direction of gravity */
-		halfvx = q.x * q.z - q.w * q.y;
-		halfvy = q.w * q.x + q.y * q.z;
-		halfvz = q.w * q.w - 0.5f + q.z * q.z;
+		halfvx = q->x * q->z - q->w * q->y;
+		halfvy = q->w * q->x + q->y * q->z;
+		halfvz = q->w * q->w - 0.5f + q->z * q->z;
 
 		/* Error is sum of cross product between estimated direction and measured direction of field vectors */
 		ris->x += (rawData.y * halfvz - rawData.z * halfvy);
@@ -36,4 +38,5 @@ void get_estimated_error_acce(struct Quaternion4f q, struct Vector3f *ris, struc
 		ris->z += (rawData.x * halfvy - rawData.y * halfvx);
 
 	}
+	return 0; //OK
 }

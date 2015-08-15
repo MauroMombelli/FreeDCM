@@ -20,14 +20,16 @@ struct Quaternion4f q;
 /* integral result */
 struct Vector3f integralFB;
 
-static void dcm_init(){
+void dcm_init(){
 	q.w = 1;
 	q.x = q.y = q.z = 0;
 
 	integralFB.x = integralFB.y = integralFB.z = 0;
 }
 
-static void dcm_step(struct Vector3f g, struct error_estimator *sensors, size_t sensors_size) {
+void dcm_step(const struct Vector3f* const gyroscope, const struct sensors* const asd) {
+
+    struct Vector3f g = {gyroscope->x, gyroscope->y, gyroscope->z};
 
 	float recipNorm;
 
@@ -36,10 +38,10 @@ static void dcm_step(struct Vector3f g, struct error_estimator *sensors, size_t 
 	halfe.x = halfe.y = halfe.z = 0;
 
 	size_t i;
-	for (i=0; i<sensors_size; i++){
+	for (i=0; i < asd->sensors_number; i++){
 		/* IF there is new raw data (get_raw_data == 0) then use it for estimation */
-		if (! (*sensors[i].get_raw_data)(&tmp_raw_data) ){
-			(*sensors[i].get_estimated_error)(q, &halfe, tmp_raw_data);
+		if (! (*asd->sensors[i].get_raw_data)(&tmp_raw_data) ){
+			(*asd->sensors[i].get_estimated_error)(&q, &tmp_raw_data, &halfe);
 		}
 	}
 
@@ -63,8 +65,6 @@ static void dcm_step(struct Vector3f g, struct error_estimator *sensors, size_t 
 		g.x += twoKp * halfe.x;
 		g.y += twoKp * halfe.y;
 		g.z += twoKp * halfe.z;
-	}else{
-		//return;
 	}
 
 	// Integrate rate of change of quaternion
@@ -89,13 +89,13 @@ static void dcm_step(struct Vector3f g, struct error_estimator *sensors, size_t 
 	q.z *= recipNorm;
 }
 
-static void dcm_get_quaternion(struct Quaternion4f *qRis){
+void dcm_get_quaternion(struct Quaternion4f* const qRis){
 	qRis->w = q.w;
 	qRis->x = q.x;
 	qRis->y = q.y;
 	qRis->z = q.z;
 }
 
-struct DCM_s DCM = {
+const struct DCM_s DCM = {
     &dcm_init, &dcm_step, &dcm_get_quaternion
 };
