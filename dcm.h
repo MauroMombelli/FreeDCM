@@ -15,7 +15,7 @@
 #include "estimators/shared.h"
 
 enum sensor_type{
-    ACCELEROMETER, MAGNETOMETER
+    GYROSCOPE, ACCELEROMETER, MAGNETOMETER
 };
 
 struct error_estimator {
@@ -35,7 +35,7 @@ struct sensors{
 
 struct DCM_s {
     void (*dcm_init)(void);
-    void (*dcm_step)(const struct Vector3f* const gyroscope, const struct sensors* const sensors);
+    void (*dcm_step)(const struct sensors* const sensors);
     void (*dcm_get_quaternion)(struct Quaternion4f* const result);
 };
 
