@@ -7,41 +7,36 @@
 
 #include "magnetometer.h"
 
-struct Vector3f zero_magne = { 0, 0, 0 };
-uint8_t last_update_m = 0;
+extern struct tmp_data tmp_shared;
+extern struct Vector3f raw_data;
+extern struct Vector3f halfe;
 
-void get_estimated_error_magne(const struct Quaternion4f* const q, const struct Vector3f* const raw_data, struct Vector3f* const ris){
+void get_estimated_error_magne() {
 
-    struct Vector3f rawData = {raw_data->x, raw_data->y, raw_data->z};
+    if (raw_data.x != 0.0f || raw_data.y != 0.0f || raw_data.z != 0.0f) {
+        float hx, hy, bx, bz;
+        float halfwx, halfwy, halfwz;
 
-	rawData.x -= zero_magne.x;
-	rawData.y -= zero_magne.y;
-	rawData.z -= zero_magne.z;
+        /* Normalize magnetometer measurement */
+        float recipNorm = invSqrt(raw_data.x * raw_data.x + raw_data.y * raw_data.y + raw_data.z * raw_data.z);
+        raw_data.x *= recipNorm;
+        raw_data.y *= recipNorm;
+        raw_data.z *= recipNorm;
 
-	if ( rawData.x != 0.0f || rawData.y != 0.0f || rawData.z != 0.0f ) {
-		float hx, hy, bx, bz;
-		float halfwx, halfwy, halfwz;
+        /* Reference direction of Earth's magnetic field */
+        hx = 2.0f * (raw_data.x * (0.5f - tmp_shared.q2q2 - tmp_shared.q3q3) + raw_data.y * (tmp_shared.q1q2 - tmp_shared.q0q3) + raw_data.z * (tmp_shared.q1q3 + tmp_shared.q0q2));
+        hy = 2.0f * (raw_data.x * (tmp_shared.q1q2 + tmp_shared.q0q3) + raw_data.y * (0.5f - tmp_shared.q1q1 - tmp_shared.q3q3) + raw_data.z * (tmp_shared.q2q3 - tmp_shared.q0q1));
+        bx = sqrtf(hx * hx + hy * hy);
+        bz = 2.0f * (raw_data.x * (tmp_shared.q1q3 - tmp_shared.q0q2) + raw_data.y * (tmp_shared.q2q3 + tmp_shared.q0q1) + raw_data.z * (0.5f - tmp_shared.q1q1 - tmp_shared.q2q2));
 
-		/* Normalize magnetometer measurement */
-		float recipNorm = invSqrt(rawData.x * rawData.x + rawData.y * rawData.y + rawData.z * rawData.z);
-		rawData.x *= recipNorm;
-		rawData.y *= recipNorm;
-		rawData.z *= recipNorm;
+        /* Estimated direction of magnetic field */
+        halfwx = bx * (0.5f - tmp_shared.q2q2 - tmp_shared.q3q3) + bz * (tmp_shared.q1q3 - tmp_shared.q0q2);
+        halfwy = bx * (tmp_shared.q1q2 - tmp_shared.q0q3) + bz * (tmp_shared.q0q1 + tmp_shared.q2q3);
+        halfwz = bx * (tmp_shared.q0q2 + tmp_shared.q1q3) + bz * (0.5f - tmp_shared.q1q1 - tmp_shared.q2q2);
 
-		/* Reference direction of Earth's magnetic field */
-		hx = 2.0f * (rawData.x * (0.5f - q->y * q->y - q->z * q->z) + rawData.y * (q->x * q->y - q->w * q->z) + rawData.z * (q->x * q->z + q->w * q->y));
-		hy = 2.0f * (rawData.x * (q->x * q->y + q->w * q->z) + rawData.y * (0.5f - q->x * q->x - q->z * q->z) + rawData.z * (q->y * q->z - q->w * q->x));
-		bx = sqrtf(hx * hx + hy * hy);
-		bz = 2.0f * (rawData.x * (q->x * q->z - q->w * q->y) + rawData.y * (q->y * q->z + q->w * q->x) + rawData.z * (0.5f - q->x * q->x - q->y * q->y));
-
-		/* Estimated direction of magnetic field */
-		halfwx = bx * (0.5f - q->y * q->y - q->z * q->z) + bz * (q->x * q->z - q->w * q->y);
-		halfwy = bx * (q->x * q->y - q->w * q->z) + bz * (q->w * q->x + q->y * q->z);
-		halfwz = bx * (q->w * q->y + q->x * q->z) + bz * (0.5f - q->x * q->x - q->y * q->y);
-
-		/* Error is sum of cross product between estimated direction and measured direction of field vectors */
-		ris->x += (rawData.y * halfwz - rawData.z * halfwy);
-		ris->y += (rawData.z * halfwx - rawData.x * halfwz);
-		ris->z += (rawData.x * halfwy - rawData.y * halfwx);
-	}
+        /* Error is sum of cross product between estimated direction and measured direction of field vectors */
+        halfe.x += (raw_data.y * halfwz - raw_data.z * halfwy);
+        halfe.y += (raw_data.z * halfwx - raw_data.x * halfwz);
+        halfe.z += (raw_data.x * halfwy - raw_data.y * halfwx);
+    }
 }

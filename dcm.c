@@ -14,11 +14,13 @@ float twoKi = 2.0f * 0.0f;
 /* frequency of sensor reading */
 const float sample_freq = 355.0f;
 
-/* Quaternion */
-struct Quaternion4f q = {1,0,0,0};
-
 /* integral result */
 struct Vector3f integralFB = {0,0,0};
+
+extern struct Quaternion4f q;
+extern struct Vector3f halfe;
+extern struct tmp_data tmp_shared;
+extern struct Vector3f raw_data;
 
 void dcm_init(){
 	q.w = 1;
@@ -28,8 +30,7 @@ void dcm_init(){
 }
 
 float recipNorm;
-
-struct Vector3f g, halfe;
+struct Vector3f g;
 size_t i;
 
 void dcm_step(const struct Vector3f* const gyroscope, const struct sensors* const sensors) {
@@ -40,14 +41,28 @@ void dcm_step(const struct Vector3f* const gyroscope, const struct sensors* cons
 
 	halfe.x = halfe.y = halfe.z = 0;
 
+	// Auxiliary variables to avoid repeated arithmetic
+	tmp_shared.q0q0 = q.w * q.w;
+	tmp_shared.q0q1 = q.w * q.x;
+	tmp_shared.q0q2 = q.w * q.y;
+	tmp_shared.q0q3 = q.w * q.z;
+	tmp_shared.q1q1 = q.x * q.x;
+	tmp_shared.q1q2 = q.x * q.y;
+	tmp_shared.q1q3 = q.x * q.z;
+	tmp_shared.q2q2 = q.y * q.y;
+	tmp_shared.q2q3 = q.y * q.z;
+	tmp_shared.q3q3 = q.z * q.z;
+
 	for (i=0; i < sensors->sensors_number; i++){
 		/* IF there is new raw data (get_raw_data == 0) then use it for estimation */
+	    raw_data = *sensors->sensors[i].last_data; //shallow copy!
+
 		switch (sensors->sensors[i].type){
 		case ACCELEROMETER:
-			get_estimated_error_acce(&q, sensors->sensors[i].last_data, &halfe);
+			get_estimated_error_acce();
 			break;
 		case MAGNETOMETER:
-		    get_estimated_error_magne(&q, sensors->sensors[i].last_data, &halfe);
+		    get_estimated_error_magne();
 		    break;
 		}
 	}
