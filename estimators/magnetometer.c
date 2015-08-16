@@ -10,7 +10,7 @@
 struct Vector3f zero_magne = { 0, 0, 0 };
 uint8_t last_update_m = 0;
 
-uint8_t get_estimated_error_magne(const struct Quaternion4f* const q, const struct Vector3f* const raw_data, struct Vector3f* const ris){
+void get_estimated_error_magne(const struct Quaternion4f* const q, const struct Vector3f* const raw_data, struct Vector3f* const ris){
 
     struct Vector3f rawData = {raw_data->x, raw_data->y, raw_data->z};
 
